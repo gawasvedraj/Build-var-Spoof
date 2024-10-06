@@ -1,6 +1,6 @@
 #!/system/bin/sh
 
-if [ "$USER" != "root" -o "$(whoami 2>/dev/null)" != "root" ]; then
+if [ "$USER" != "root" -a "$(whoami 2>/dev/null)" != "root" ]; then
   echo "autopif: need root permissions";
   exit 1;
 fi;
@@ -11,7 +11,7 @@ case "$1" in
 esac;
 
 echo "Xiaomi.eu spoof_build_vars extractor script \
-  \n  by osm0sis @ xda-developers & Irena";
+  \n  by osm0sis @ xda-developers, Irena, Vedraj";
 
 case "$0" in
   *.sh) DIR="$0";;

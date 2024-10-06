@@ -37,6 +37,8 @@ find_busybox() {
 if ! which wget >/dev/null || grep -q "wget-curl" $(which wget); then
   if ! find_busybox; then
     die "wget not found, install busybox";
+  elif $BUSYBOX ping -c1 -s2 android.com 2>&1 | grep -q "bad address"; then
+    die "wget broken, install busybox";
   else
     wget() { $BUSYBOX wget "$@"; }
   fi;
@@ -84,9 +86,10 @@ if [ ! -d $OUT ]; then
 fi;
 
 item "Converting inject_fields.xml to key-value pairs ..."
-grep -o '<field.*' $OUT/res/xml/inject_fields.xml | \
-sed 's;.*name=\("\([^"]*\)"\) type.* value=\("\([^"]*\)"\).*;  \1=\2;g' | \
-tee spoof_build_vars
+echo -e "$(for i in $(seq 1 $(grep -o '<field.*' $OUT/res/xml/inject_fields.xml | wc -l));
+do
+    echo "$(grep -o '<field.*' $OUT/res/xml/inject_fields.xml | cut -f 2 -d ' ' | cut -f 2 -d '"' | cut -f $i -d $'\n')=$(grep -o '<field.*' $OUT/res/xml/inject_fields.xml | cut -f 4 -d ' ' | cut -f 2 -d '"' | cut -f $i -d $'\n')"
+done)" | tee spoof_build_vars
 grep -q "FINGERPRINT" spoof_build_vars || die "Failed to extract information from inject_fields.xml"
 
 if [ "$DIR" = /data/adb/modules/build_var_spoof/autopif ]; then
@@ -98,5 +101,5 @@ if [ "$DIR" = /data/adb/modules/build_var_spoof/autopif ]; then
   item "Installing new spoof_build_vars ...";
   cp -fv $NEWNAME ..;
   item "Killing any running GMS DroidGuard process ...";
-  killall -v com.google.android.gms.unstable;
+  killall -v com.google.android.gms.unstable || true;
 fi;

@@ -266,21 +266,16 @@ void read_config(FILE *config, SpoofConfig &spoof_config) {
     }
 }
 static void companion_handler(int fd) {
-    constexpr auto kSpoofConfigFile = "/data/adb/build_var_spoof/spoof_build_vars"sv;
+    constexpr auto kSpoofConfigFile = "/data/adb/modules/build_var_spoof/spoof_build_vars"sv;
     constexpr auto kDefaultSpoofConfig =
             R"EOF(
 MANUFACTURER=Google
-MODEL=Pixel 9 Pro XL
-FINGERPRINT=google/komodo_beta/komodo:15/AP31.240617.015/12207491:user/release-keys
 BRAND=google
-PRODUCT=komodo_beta
-DEVICE=komodo
-RELEASE=15
-ID=AP31.240617.015
-INCREMENTAL=12207491
-TYPE=user
-TAGS=release-keys
-SECURITY_PATCH=2024-08-05
+DEVICE=tokay
+PRODUCT=tokay_beta
+MODEL=Pixel
+FINGERPRINT=google/tokay_beta/tokay:15/AP41.240823.009/12329489:user/release-keys
+SECURITY_PATCH=2024-09-05
 )EOF"sv;
     struct stat st{};
     int enabled = stat(kSpoofConfigFile.data(), &st) == 0;

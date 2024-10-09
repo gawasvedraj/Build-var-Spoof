@@ -88,7 +88,7 @@ fi;
 item "Converting inject_fields.xml to key-value pairs ..."
 echo -e "$(for i in $(seq 1 $(grep -o '<field.*' $OUT/res/xml/inject_fields.xml | wc -l));
 do
-    echo "$(grep -o '<field.*' $OUT/res/xml/inject_fields.xml | cut -f 2 -d ' ' | cut -f 2 -d '"' | cut -f $i -d $'\n')=$(grep -o '<field.*' $OUT/res/xml/inject_fields.xml | cut -f 4 -d ' ' | cut -f 2 -d '"' | cut -f $i -d $'\n')"
+    echo "$(grep -o '<field.*' $OUT/res/xml/inject_fields.xml | cut -f 2 -d '"' | cut -f $i -d $'\n')=$(grep -o '<field.*' $OUT/res/xml/inject_fields.xml | cut -f 6 -d '"' | cut -f $i -d $'\n')"
 done)" | tee spoof_build_vars
 grep -q "FINGERPRINT" spoof_build_vars || die "Failed to extract information from inject_fields.xml"
 
